@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini Response</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Gemini Response</h1>
+    <a href="{{ url_for('index') }}" class="back-link">← Back to Input</a>
+
+    <div class="section result-section">
+        <h2>Original Prompt / Input</h2>
+        <p class="prompt-display">
+            {{ prompt }}
+            {% if filename %}
+                <br><em>(File: {{ filename }})</em>
+            {% endif %}
+        </p>
+
+        <h2>Generated Response</h2>
+        <div class="response-container">
+            <pre id="response-text">{{ result }}</pre>
+        </div>
+
+        <div class="actions">
+            <button id="copy-button">Copy Text</button>
+
+            <form action="{{ url_for('save_text') }}" method="post" style="display: inline;">
+                <input type="hidden" name="text_content" value="{{ result }}">
+                 <input type="hidden" name="original_prompt" value="{{ prompt }}">
+                <button type="submit">Save as .txt</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

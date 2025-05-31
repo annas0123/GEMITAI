@@ -1,0 +1,107 @@
+{% if result %}
+<div class="result-section">
+    <!-- Changed text color to green -->
+    <h3 class="section-title" style="color: #4CAF50;">Generation Result</h3>
+
+    <div class="response-box">
+        <pre id="response-text">{{ result | escape }}</pre>
+
+
+    </div>
+
+    <div class="button-group">
+        <button id="copy-button" class="btn">📋 Copy</button>
+        <form action="{{ url_for('save_text') }}" method="post" style="display: inline;">
+            <input type="hidden" name="text_content" value="{{ result }}">
+            <input type="hidden" name="original_prompt" value="{{ prompt if prompt else 'gemini_response' }}">
+            <!-- Buttons are already blue, matching the image -->
+            <button type="submit" class="btn">💾 Save as .txt</button>
+        </form>
+    </div>
+</div>
+
+<style>
+    .result-section {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 25px;
+        margin-top: 30px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        backdrop-filter: blur(10px);
+        color: #ffffff;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .section-title {
+        font-size: 22px;
+        margin-bottom: 18px;
+        /* Original color was #fff, changed to green #4CAF50 */
+        /* color: #fff; */
+        text-align: center;
+        border-bottom: 1px solid rgba(214, 16, 16, 0.721);
+        padding-bottom: 10px;
+    }
+
+    .prompt-display label {
+        font-weight: 600;
+        font-size: 15px;
+        margin-bottom: 6px;
+        display: block;
+        color: #cccccc;
+    }
+
+    .prompt-box {
+        background-color: rgba(255, 255, 255, 0.07);
+        padding: 12px;
+        border-radius: 10px;
+        color: #f0f0f0;
+        font-size: 14px;
+        line-height: 1.5;
+        margin-bottom: 12px;
+    }
+
+    .filename {
+        font-size: 12px;
+        color: #bbbbbb;
+        margin-top: 5px;
+    }
+
+    .response-box {
+        background: rgba(255, 255, 255, 0.08);
+        padding: 15px;
+        border-radius: 10px;
+        color: #fefefe;
+        white-space: pre-wrap;
+        font-size: 15px;
+        line-height: 1.6;
+        max-height: 400px;
+        overflow-y: auto;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .button-group {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        /* Background is already blue #1e88e5, matching the image */
+        background: #1e88e5;
+        color: white;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background 0.3s ease;
+    }
+
+    .btn:hover {
+        background: #1565c0; /* Darker blue on hover */
+    }
+</style>
+{% endif %}

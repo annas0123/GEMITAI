@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+
+{% block title %}Feature Selection - GEMITAI{% endblock %}
+
+{% block content %}
+<!-- GEMITAI Logo -->
+
+    <h2 style="text-align: center; font-family: 'Poppins', sans-serif; color: #ffffff; margin-top: 5px;">Choose a Gemini Feature</h2>
+   
+
+    <!-- Search Input -->
+    <div class="search-container" style="margin-bottom: 20px; text-align: center;">
+        <label for="feature-search-input" style="display: block; margin-bottom: 5px; font-weight: bold; color: #ffffff; font-family: 'Poppins', sans-serif;">
+            Search Features:
+        </label>
+        <input type="search" id="feature-search-input" placeholder="E.g., text, pdf, video, excel..." 
+            style="width: 50%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 1em; font-family: 'Poppins', sans-serif;">
+    </div>
+    <p id="no-results-message" style="display: none; text-align: center; margin-top: 20px; color: #ff80ab; font-family: 'Poppins', sans-serif;">
+        No features match your search.
+    </p>
+
+    <!-- Feature Grid -->
+    <div class="feature-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+        <!-- Text Generation Card -->
+        <div class="feature-card">
+            <h3><i class="fas fa-keyboard"></i> Text Generation</h3>
+            <p>Provide a text prompt, and Gemini will generate a creative and coherent text response. Useful for writing assistance, brainstorming, summarization, and more.</p>
+            <a href="{{ url_for('feature_text') }}" class="try-button">Try Text Generation</a>
+        </div>
+
+        <!-- Image Editor Card -->
+        <div class="feature-card">
+            <h3><i class="fas fa-edit"></i> Image Editor</h3>
+            <p>Upload multiple images (up to 100) and provide text instructions to edit them. Add objects, change styles, remove elements, and more using Gemini AI.</p>
+            <a href="{{ url_for('feature_image_editor') }}" class="try-button">Try Image Editor</a>
+        </div>
+
+        <!-- PDF Interaction Card -->
+        <div class="feature-card">
+            <h3><i class="fas fa-file-pdf"></i> Interact with PDF</h3>
+            <p>Upload a PDF document and ask questions about its content or request summaries. Gemini will analyze the document to provide answers.</p>
+            <a href="{{ url_for('feature_pdf') }}" class="try-button">Try PDF Interaction</a>
+        </div>
+
+        <!-- Image Interaction Card -->
+        <div class="feature-card">
+            <h3><i class="fas fa-image"></i> Interact with Image</h3>
+            <p>Upload an image file and ask questions about its content. Gemini will analyze the image and provide insights.</p>
+            <a href="{{ url_for('feature_image') }}" class="try-button">Try Image Interaction</a>
+        </div>
+
+        <!-- Video Interaction Card -->
+        <div class="feature-card">
+            <h3><i class="fas fa-video"></i> Interact with Video</h3>
+            <p>Upload a video file and ask questions about its content. Gemini will process the video and provide answers.</p>
+            <a href="{{ url_for('feature_video') }}" class="try-button">Try Video Interaction</a>
+        </div>
+
+        <!-- Audio Interaction Card -->
+        <div class="feature-card">
+            <h3><i class="fas fa-headphones"></i> Interact with Audio</h3>
+            <p>Upload an audio file and ask questions about its content. Gemini will analyze the audio and provide detailed insights.</p>
+            <a href="{{ url_for('feature_audio') }}" class="try-button">Try Audio Interaction</a>
+        </div>
+
+        <!-- Excel AI Prompter Card -->
+        <div class="feature-card">
+            <h3><i class="fas fa-file-excel"></i> Excel AI Prompter</h3>
+            <p>Upload an Excel file and provide a prompt. Gemini will process the data and generate insights or summaries.</p>
+            <a href="{{ url_for('feature_excel') }}" class="try-button">Try Excel AI Prompter</a>
+        </div>
+
+        <!-- Excel Row Processor Card -->
+        <div class="feature-card">
+            <h3><i class="fas fa-table"></i> Excel Row Processor</h3>
+            <p>Process each row of an Excel file with a custom prompt. Gemini will generate results for each row.</p>
+            <a href="{{ url_for('feature_excel_row') }}" class="try-button">Try Excel Row Processor</a>
+        </div>
+
+        <!-- Image Generation Card -->
+        <div class="feature-card">
+            <h3><i class="fas fa-paint-brush"></i> Image Generation</h3>
+            <p>Generate beautiful AI images from text prompts. Create landscapes, portraits, fantasy creatures, product visualizations, and more with Gemini.</p>
+            <a href="{{ url_for('feature_image_generation') }}" class="try-button">Try Image Generation</a>
+        </div>
+
+        <!-- Story Prompt Generator Card -->
+        <div class="feature-card">
+            <h3><i class="fas fa-book"></i> Story Prompt Generator</h3>
+            <p>Convert your story into AI prompts. Enter your story and get prompts for each sentence, ready to use for image generation or text completion.</p>
+            <a href="{{ url_for('feature_story_prompts') }}" class="try-button">Try Story Prompt Generator</a>
+        </div>
+
+        <!-- Sentence Splitter Card -->
+        <div class="feature-card">
+            <h3><i class="fas fa-scissors"></i> Sentence Splitter</h3>
+            <p>Split paragraphs into individual sentences. Perfect for text analysis, creating datasets, or preparing content for further processing.</p>
+            <a href="{{ url_for('feature_sentence_splitter') }}" class="try-button">Try Sentence Splitter</a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts_extra %}
+    <script>
+        // Real-time Search Filtering
+        const searchInput = document.getElementById('feature-search-input');
+        const featureCards = document.querySelectorAll('.feature-card');
+        const noResultsMessage = document.getElementById('no-results-message');
+
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.toLowerCase();
+            let hasResults = false;
+
+            featureCards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(query)) {
+                    card.style.display = 'block';
+                    hasResults = true;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            noResultsMessage.style.display = hasResults ? 'none' : 'block';
+        });
+    </script>
+<style>
+    /* Background Gradient */
+    body {
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        font-family: 'Poppins', sans-serif;
+        color: #ffffff;
+        overflow-x: hidden;
+    }
+    .back-link {
+        display: inline-block;
+        margin-bottom: 20px;
+        color: #ff80ab;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+
+    /* Logo Animation */
+    @keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+        50% {
+            transform: scale(1.1);
+            opacity: 0.8;
+        }
+    }
+
+    /* Feature Card Container */
+    .feature-grid {
+        padding: 30px;
+    }
+
+    /* Feature Card Styles */
+    .feature-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        padding: 25px;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 0 25px rgba(0, 255, 255, 0.4), 0 0 60px rgba(255, 0, 255, 0.3);
+    }
+
+    .feature-card h3 {
+        color: #ff80ab;
+        font-size: 1.4em;
+        margin-bottom: 10px;
+    }
+
+    .feature-card p {
+        color: #d1c4e9;
+        font-size: 0.95em;
+        line-height: 1.5em;
+    }
+
+    /* Neon Button Styles */
+    .try-button {
+        background: linear-gradient(90deg, #ff6ec4, #7873f5);
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 10px;
+        font-size: 1em;
+        font-weight: bold;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 15px;
+        position: relative;
+        z-index: 1;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .try-button::before {
+        content: '';
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        right: -5px;
+        bottom: -5px;
+        background: linear-gradient(90deg, #ff6ec4, #7873f5);
+        filter: blur(15px);
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+        z-index: -1;
+        border-radius: 12px;
+    }
+
+    .try-button:hover::before {
+        opacity: 1;
+    }
+
+    .try-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px #ff6ec4, 0 0 30px #7873f5;
+    }
+
+    /* Search Input Styles */
+    input[type="search"] {
+        background-color: rgba(255, 255, 255, 0.15);
+        color: #ffffff;
+        border: none;
+        border-radius: 8px;
+        font-size: 1em;
+        padding: 12px;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        transition: box-shadow 0.3s ease-in-out;
+    }
+
+    input[type="search"]:focus {
+        outline: none;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+    }
+
+    input[type="search"]::placeholder {
+        color: #d1c4e9;
+    }
+
+    #no-results-message {
+        font-weight: bold;
+        font-size: 1.1em;
+    }
+</style>
+{% endblock %}

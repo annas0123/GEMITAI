@@ -1,0 +1,365 @@
+/* General Styles (Keep existing or adapt) */
+body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 0; /* Remove default margin */
+    background-color: #f8f9fa; /* Lighter gray */
+    color: #343a40; /* Darker text */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 960px;
+    margin: 20px auto;
+    padding: 0 15px;
+    flex-grow: 1; /* Make container grow */
+}
+
+header {
+    background-color: #0d47a1;
+    color: white;
+    padding: 1rem 0;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    margin: 0;
+    color: white;
+}
+
+footer {
+    text-align: center;
+    margin-top: 30px;
+    padding: 15px;
+    color: #6c757d; /* Gray text */
+    font-size: 0.9em;
+    background-color: #e9ecef; /* Light gray background */
+}
+
+
+h1, h2 {
+    color: #0d47a1; /* Darker blue */
+}
+
+/* --- Grid Layout for Index Page --- */
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
+    gap: 20px; /* Space between cards */
+    margin-top: 20px;
+}
+
+.feature-card {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column; /* Stack content vertically */
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.feature-card h3 {
+    margin-top: 0;
+    color: #1976d2; /* Blue heading */
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.feature-card p {
+    flex-grow: 1; /* Make paragraph take available space */
+    margin-bottom: 20px;
+    color: #495057; /* Slightly darker gray text */
+    font-size: 0.95em;
+}
+
+.feature-card .try-button {
+    background-color: #28a745; /* Green button */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    text-align: center;
+    text-decoration: none; /* For <a> tag */
+    display: inline-block; /* Proper button sizing */
+    transition: background-color 0.2s ease;
+}
+
+.feature-card .try-button:hover {
+    background-color: #218838; /* Darker green */
+}
+
+
+/* --- Feature Page Styles --- */
+.feature-page {
+    background-color: #fff;
+    padding: 30px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.feature-page h2 {
+    margin-top: 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #495057;
+}
+
+form input[type="file"],
+form textarea {
+    width: calc(100% - 22px); /* Adjust for padding/border */
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ced4da; /* Lighter border */
+    border-radius: 4px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+form input[type="file"] {
+    padding: 8px 10px; /* Adjust file input padding */
+}
+
+form textarea {
+    resize: vertical; /* Allow vertical resizing */
+    min-height: 80px;
+}
+
+form button[type="submit"] {
+    background-color: #1976d2; /* Nice blue */
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.05em;
+    transition: background-color 0.2s ease;
+    margin-top: 10px;
+}
+
+form button[type="submit"]:hover {
+    background-color: #1565c0; /* Darker blue on hover */
+}
+
+/* --- Loading Indicator --- */
+#loading-indicator {
+    display: none; /* Hidden by default */
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #e3f2fd;
+    border: 1px solid #bbdefb;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: bold;
+    color: #0d47a1;
+}
+#loading-indicator.visible {
+    display: block; /* Show when processing */
+}
+.spinner { /* Optional simple spinner */
+  border: 4px solid #f3f3f3; /* Light grey */
+  border-top: 4px solid #1976d2; /* Blue */
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+/* --- Result Display Area (Shared) --- */
+.result-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.result-section h3 { /* Changed from h2 */
+    color: #28a745; /* Green for results */
+    margin-bottom: 15px;
+}
+
+.prompt-display {
+    background-color: #f1f3f5; /* Very light gray */
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-style: italic;
+    word-wrap: break-word;
+    border: 1px solid #e9ecef;
+    color: #495057;
+}
+.prompt-display strong {
+    font-style: normal;
+    color: #343a40;
+}
+
+
+.response-container {
+    background-color: #e8f5e9; /* Light green background */
+    padding: 15px;
+    border: 1px solid #c8e6c9; /* Lighter green border */
+    border-radius: 4px;
+    margin-top: 15px;
+    max-height: 60vh;
+    overflow-y: auto;
+    line-height: 1.5; /* Improve readability */
+}
+
+.response-container pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin: 0;
+    font-size: 1em; /* Slightly larger pre text */
+    color: #1b5e20; /* Dark green text */
+}
+
+.actions {
+    margin-top: 20px;
+}
+
+.actions button,
+.actions form button { /* Style form button like others */
+    background-color: #6c757d; /* Gray */
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease;
+    margin-right: 10px; /* Space between buttons */
+}
+.actions button:hover,
+.actions form button:hover {
+    background-color: #5a6268; /* Darker gray */
+}
+.actions form {
+    display: inline-block; /* Keep form inline */
+}
+
+
+/* Flash Messages (Keep existing or adapt) */
+.flash-messages {
+    max-width: 960px;
+    margin: 0 auto 15px auto; /* Center flash messages */
+    padding: 0 15px;
+}
+.flash {
+    padding: 12px 18px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    border: 1px solid transparent;
+}
+.flash.error {
+    background-color: #f8d7da; /* Bootstrap danger */
+    color: #721c24;
+    border-color: #f5c6cb;
+}
+.flash.success {
+    background-color: #d4edda; /* Bootstrap success */
+    color: #155724;
+    border-color: #c3e6cb;
+}
+
+
+/* Back Link */
+.back-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #1976d2;
+    text-decoration: none;
+    font-weight: bold;
+}
+.back-link:hover {
+    text-decoration: underline;
+}
+
+/* Add to static/style.css if you want more specific styling */
+
+.search-container {
+    margin-bottom: 25px; /* Slightly more space */
+  }
+  
+  #feature-search-input {
+      padding: 12px 15px; /* Adjust padding */
+      font-size: 1rem; /* Standard font size */
+      box-sizing: border-box; /* Include padding/border in width */
+      width: 100%; /* Make it full width of container */
+      max-width: 500px; /* Optional: Limit max width */
+      display: block; /* Ensure it takes its own line */
+      margin-left: auto; /* Optional: Center if max-width is set */
+      margin-right: auto; /* Optional: Center if max-width is set */
+  }
+  
+  #no-results-message {
+      padding: 15px;
+      font-style: italic;
+  }
+  /* Add to static/style.css */
+
+.result-section h3 {
+    margin-top: 0;
+    color: #1b5e20; /* Dark Green */
+}
+
+.download-button {
+    display: inline-block; /* Allows padding/margin */
+    background-color: #28a745; /* Green */
+    color: white !important; /* Ensure text is white */
+    padding: 10px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    border: none; /* Remove border if anchor styled like button */
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.download-button:hover {
+    background-color: #218838; /* Darker green */
+    color: white !important;
+}
+
+.result-section small {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.9em;
+    color: #555;
+}
+
+/* Style flash messages if not already done */
+.flash.success {
+    background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+}

@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}Image Interaction - Gemini API{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('index') }}" class="back-link" style="color: #ff80ab; text-decoration: none; font-family: 'Poppins', sans-serif;">← Back to Features</a>
+<div class="feature-page" style="max-width: 600px; margin: 0 auto; padding: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 12px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+    <h2 style="color: #ffffff; text-align: center; font-family: 'Poppins', sans-serif;">Interact with Image</h2>
+    <p style="color: #d1c4e9; font-family: 'Poppins', sans-serif; text-align: center;">
+        Upload an image file and enter a prompt related to its content. Ensure you are using a vision-capable model (like Gemini 1.5 Pro or Flash).
+    </p>
+
+    <!-- Prompt Library -->
+    <div class="prompt-library" style="margin-bottom: 20px; text-align: left;">
+        <label for="prompt-category-select" style="color: #ffffff; font-family: 'Poppins', sans-serif;">Prompt Library:</label>
+        <div class="prompt-select-wrapper" style="display: flex; flex-direction: column; gap: 10px;">
+            <select id="prompt-category-select" style="padding: 10px; border-radius: 8px; background: rgba(255, 255, 255, 0.2); color: #ffffff; border: 1px solid #ccc;">
+                <option value="">-- Select Category --</option>
+            </select>
+            <select id="prompt-select" disabled style="padding: 10px; border-radius: 8px; background: rgba(255, 255, 255, 0.2); color: #ffffff; border: 1px solid #ccc;">
+                <option value="">-- Select Prompt Title --</option>
+            </select>
+        </div>
+    </div>
+
+    <form action="{{ url_for('feature_image') }}" method="post" enctype="multipart/form-data" class="feature-form" style="text-align: center;">
+        <label for="file_image" style="color: #ffffff; font-family: 'Poppins', sans-serif;">Upload Image:</label>
+        <input type="file" id="file_image" name="file_image" accept="image/*" required
+            style="width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 8px; background-color: rgba(255, 255, 255, 0.2); color: #ffffff;">
+
+        <label for="prompt_image" style="color: #ffffff; font-family: 'Poppins', sans-serif;">Ask about the Image:</label>
+        <textarea id="prompt_image" name="prompt_image" rows="4" required
+            style="width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 8px; background-color: rgba(255, 255, 255, 0.2); color: #ffffff;"></textarea>
+
+        <!-- Loading Indicator -->
+        <div id="loading-indicator" class="loading-indicator" style="display: none; margin-top: 20px; color: #ffffff;">
+            <span class="spinner" style="border: 4px solid #ffffff; border-top: 4px solid #ff80ab; border-radius: 50%; width: 20px; height: 20px; display: inline-block; animation: spin 1s linear infinite;"></span>
+            Processing Image & Generating... <span class="timer-span">0s</span>
+        </div>
+
+        <button type="submit" style="margin-top: 20px; background: linear-gradient(90deg, #ff6ec4, #7873f5); color: white; padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 1em; font-family: 'Poppins', sans-serif; transition: box-shadow 0.3s ease, transform 0.3s ease;">
+            Generate from Image
+        </button>
+    </form>
+
+    <!-- Include Result Display Partial -->
+    {% include 'partials/_result_display.html' with context %}
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script>
+    window.promptData = {{ prompts_data | tojson | safe if prompts_data else '{}' }};
+</script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+<style>
+     /* Background Gradient */
+     body {
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        font-family: 'Poppins', sans-serif;
+        color: #ffffff;
+        overflow-x: hidden;
+    }
+    .back-link {
+        display: inline-block;
+        margin-bottom: 20px;
+        color: #ff80ab;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+
+    /* Spinner Animation */
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Neon Button Hover Effect */
+    button:hover {
+        box-shadow: 0 0 15px #ff6ec4, 0 0 30px #7873f5;
+        transform: scale(1.05);
+    }
+
+    /* Back Link Hover Effect */
+    .back-link:hover {
+        text-decoration: underline;
+        color: #ff6ec4;
+    }
+
+    /* Form Container Styling */
+    .feature-page {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Input and Textarea Styling */
+    input[type="file"], textarea, select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background-color: rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Loading Indicator Styling */
+    .loading-indicator {
+        display: none;
+        margin-top: 20px;
+        color: #ffffff;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .spinner {
+        border: 4px solid #ffffff;
+        border-top: 4px solid #ff80ab;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+        animation: spin 1s linear infinite;
+    }
+
+    /* Prompt Library Styling */
+    .prompt-library {
+        margin-bottom: 20px;
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+    }
+
+    .prompt-select-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    @media (min-width: 600px) {
+        .prompt-select-wrapper {
+            flex-direction: row;
+        }
+    }
+
+    select option {
+        background-color: #352f5b;
+        color: #fff;
+    }
+</style>
+{% endblock %}

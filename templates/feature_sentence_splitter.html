@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+
+{% block title %}Sentence Splitter - GEMITAI{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('index') }}" class="back-link">
+    ← Back to Features
+</a>
+
+<div class="feature-page">
+    <h2 class="title">Sentence Splitter</h2>
+    <p class="subtitle">Enter text below and get it split into individual sentences in an Excel file.</p>
+
+    <form action="{{ url_for('feature_sentence_splitter') }}" method="post" class="feature-form">
+        <label for="input_text">Enter your text:</label>
+        <textarea id="input_text" name="input_text" rows="8" required 
+            placeholder="Enter your paragraph or text here. Each sentence will be extracted and saved as a separate row in an Excel file."></textarea>
+
+        <div id="loading-indicator" class="loading-indicator">
+            <span class="spinner"></span>
+            Processing Text & Generating Excel File... <span class="timer-span">0s</span>
+        </div>
+
+        <button type="submit" class="generate-button">Split Sentences</button>
+    </form>
+
+    {% if excel_file %}
+    <div class="result-section">
+        <h3 class="section-title">Processed Text</h3>
+        
+        <div class="result-info">
+            <p>Your text has been processed and split into {{ sentence_count }} sentences.</p>
+            <p>Each sentence has been saved as a separate row in the Excel file.</p>
+        </div>
+        
+        <div class="download-container">
+            <a href="{{ url_for('download_sentence_excel', filename=excel_file) }}" class="download-btn">
+                <span class="download-icon">📥</span> Download Excel File
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        setupFormSubmitHandler();
+    });
+    
+    function setupFormSubmitHandler() {
+        const form = document.querySelector('form');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        
+        if (form && loadingIndicator) {
+            form.addEventListener('submit', function() {
+                loadingIndicator.style.display = 'flex';
+                let seconds = 0;
+                const timerSpan = document.querySelector('.timer-span');
+                
+                const timer = setInterval(function() {
+                    seconds++;
+                    if (timerSpan) timerSpan.textContent = seconds + 's';
+                }, 1000);
+                
+                // Store timer in sessionStorage to be cleared if needed
+                sessionStorage.setItem('processingTimer', timer);
+            });
+        }
+    }
+</script>
+{% endblock %}
+
+{% block styles %}
+<style>
+    # /* Background Gradient */
+    body {
+        background: linear-gradient(135deg, #1a1046, #1e1155, #2a1a64);
+        font-family: 'Poppins', sans-serif;
+        color: #d9d9ff;
+        overflow-x: hidden;
+    }
+    
+    /* Back Link */
+    .back-link {
+        display: inline-block;
+        margin-bottom: 20px;
+        color: #ff80ab;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+    
+    .back-link:hover {
+        color: #ff6ec4;
+        text-shadow: 0 0 8px #ff6ec4;
+    }
+    
+    .feature-page {
+        background: rgba(255, 255, 255, 0.08);
+        padding: 40px;
+        border-radius: 20px;
+        max-width: 750px;
+        margin: auto;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+        backdrop-filter: blur(8px);
+    }
+    
+    .title {
+        text-align: center;
+        font-size: 32px;
+        color: #ffffff;
+        margin-bottom: 15px;
+        text-shadow: 0 0 6px #fff;
+    }
+    
+    .subtitle {
+        text-align: center;
+        color: #d9d9ff;
+        margin-bottom: 35px;
+        font-size: 16px;
+    }
+    
+    .section-title {
+        color: #d9d9ff;
+        font-size: 24px;
+        margin: 15px 0;
+        text-align: center;
+    }
+    
+    /* Form Elements */
+    .feature-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        background: rgba(72, 65, 117, 0.6);
+        padding: 25px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+    }
+    
+    .feature-form label {
+        font-weight: 600;
+        display: block;
+        margin-bottom: 8px;
+        color: #d9d9ff;
+    }
+    
+    textarea {
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid #ffffff33;
+        font-family: 'Poppins', sans-serif;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.15);
+        color: #ffffff;
+        backdrop-filter: blur(4px);
+        transition: border 0.3s;
+        resize: vertical;
+    }
+    
+    textarea:focus {
+        border-color: #ff80ab;
+        outline: none;
+        box-shadow: 0 0 8px #ff80ab;
+    }
+    
+    /* Button Styling */
+    .generate-button, .download-btn {
+        background: linear-gradient(90deg, #ff56b1, #f26dff);
+        color: #d9d9ff;
+        padding: 14px 24px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 1em;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        text-align: center;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .generate-button {
+        align-self: center;
+    }
+    
+    .generate-button:hover, .download-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 15px rgba(255, 86, 177, 0.5);
+    }
+    
+    /* Loading Indicator */
+    .loading-indicator {
+        display: none;
+        margin: 15px 0;
+        color: #d9d9ff;
+        font-family: 'Poppins', sans-serif;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .spinner {
+        border: 4px solid rgba(217, 217, 255, 0.3);
+        border-top: 4px solid #ff80ab;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: inline-block;
+        animation: spin 1s linear infinite;
+        margin-right: 10px;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    /* Results Section */
+    .result-section {
+        margin-top: 35px;
+        background: rgba(72, 65, 117, 0.6);
+        border-radius: 15px;
+        padding: 25px;
+    }
+    
+    .result-info {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 15px;
+        margin: 20px 0;
+        text-align: center;
+    }
+    
+    .download-container {
+        text-align: center;
+        margin-top: 25px;
+    }
+    
+    .download-btn {
+        background: linear-gradient(90deg, #1e88e5, #1565c0);
+        padding: 15px 30px;
+        border-radius: 10px;
+        font-size: 1.1em;
+    }
+    
+    .download-icon {
+        margin-right: 8px;
+        font-size: 1.2em;
+    }
+</style>
+{% endblock %}

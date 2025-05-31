@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Gemini API Interface{% endblock %}</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {% block head_extra %}{% endblock %}
+    <style>
+     body {
+    background: linear-gradient(to right, #000f33, #1a0033, #2a003f);
+    color: #eee;
+    font-family: 'Orbitron', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* .custom-header {
+    background: linear-gradient(145deg, #1a0033, #2b004f);
+    padding: 20px 15px;
+    text-align: center;
+    border-radius: 20px 20px 0 0;
+    margin-bottom: 50px;
+    position: relative;
+    z-index: 1;
+    border: 2px solid transparent;
+    animation: borderGlow 4s linear infinite;
+    overflow: hidden;
+}
+
+.custom-header::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(270deg, #6a0dad, #4b0082, #5b2c6f, #6a0dad);
+    background-size: 600% 600%;
+    z-index: -1;
+    filter: blur(12px);
+    animation: neonBorder 10s ease infinite;
+    border-radius: 20px;
+}
+
+.custom-header h1 {
+    font-size: 38px;
+    letter-spacing: 3px;
+    color: #ffffff;
+    text-shadow:
+        0 0 5px #6a0dad,
+        0 0 10px #4b0082,
+        0 0 20px #5b2c6f;
+    animation: textGlow 3s ease-in-out infinite alternate;
+} */
+
+@keyframes textGlow {
+    0% {
+        text-shadow: 0 0 8px #4b0082, 0 0 12px #5b2c6f, 0 0 16px #3d0066;
+    }
+    100% {
+        text-shadow: 0 0 16px #6a0dad, 0 0 24px #5b2c6f, 0 0 36px #2a003f;
+    }
+}
+
+@keyframes borderGlow {
+    0% {
+        box-shadow:
+            0 0 15px rgba(106, 13, 173, 0.4),
+            0 0 30px rgba(75, 0, 130, 0.3),
+            inset 0 0 20px rgba(91, 44, 111, 0.3);
+    }
+    100% {
+        box-shadow:
+            0 0 25px rgba(58, 0, 102, 0.6),
+            0 0 50px rgba(75, 0, 130, 0.4),
+            inset 0 0 25px rgba(64, 0, 128, 0.4);
+    }
+}
+.custom-footer {
+    text-align: center;
+    margin-top: 60px;
+    padding: 20px;
+    background: linear-gradient(145deg, #140028, #1e0035); /* dark purple gradient */
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 14px;
+    color: #cbb4ff; /* soft light purple */
+    font-weight: bold;
+    box-shadow: 0 -2px 10px rgba(106, 13, 173, 0.2);
+}
+
+.custom-footer .app-name {
+    color: #a370f7; /* royal purple */
+    font-weight: 700;
+    text-shadow: 0 0 6px rgba(163, 112, 247, 0.3);
+}
+
+.custom-footer .powered {
+    color: #8b5cf6; /* darker purple */
+    font-weight: 600;
+    text-shadow: 0 0 6px rgba(139, 92, 246, 0.2);
+}
+
+.custom-header {
+    background: linear-gradient(145deg, #0a0022, #140033, #1a0040); /* rich dark-purple/navy */
+    padding: 20px 15px;
+    text-align: center;
+    border-radius: 20px 20px 0 0;
+    margin-bottom: 50px;
+    position: relative;
+    z-index: 1;
+    border: 2px solid transparent;
+    animation: borderGlow 4s linear infinite;
+    overflow: hidden;
+}
+
+.custom-header::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(270deg, #5b21b6, #6d28d9, #7c3aed, #5b21b6);
+    background-size: 600% 600%;
+    z-index: -1;
+    filter: blur(12px);
+    animation: neonBorder 10s ease infinite;
+    border-radius: 20px;
+}
+
+.custom-header h1 {
+    font-size: 42px;
+    letter-spacing: 4px;
+    font-weight: bold;
+    color: #e0d4ff; /* pale lilac for contrast */
+    text-shadow:
+        0 0 8px #6d28d9,
+        0 0 16px #7c3aed,
+        0 0 24px #5b21b6;
+    animation: textGlow 3s ease-in-out infinite alternate;
+}
+
+
+    </style>
+</head>
+<body>
+    <header class="custom-header">
+        <h1>GEMITAI</h1>     
+    </header>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer class="custom-footer">
+        <p>
+            © {% if now %}{{ now.year }}{% else %}{{ current_year }}{% endif %} 
+            <span class="app-name">Gemini Interaction App</span>. 
+            <span class="powered">Powered by Google Gemini.</span>
+        </p>
+    </footer>
+    
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    {% block scripts_extra %}{% endblock %}
+</body>
+</html>

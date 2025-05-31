@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+
+{% block title %}Text Generation - Gemini API{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('index') }}" class="back-link">
+    ← Back to Features
+</a>
+
+<div class="feature-page">
+    <h2 class="title">Generate Text from Prompt</h2>
+    <p class="subtitle">Enter your text prompt below or select a template from the library.</p>
+
+    <div class="prompt-library">
+        <label for="prompt-category-select">Prompt Library:</label>
+        <div class="prompt-select-wrapper">
+            <select id="prompt-category-select">
+                <option value="">-- Select Category --</option>
+                
+            </select>
+            <select id="prompt-select" disabled>
+                <option value="">-- Select Prompt Title --</option>
+                <option value="explain_python">Explain Python Code</option>
+                <option value="generate_sql">Generate SQL Queries</option>
+            </select>
+        </div>
+    </div>
+
+    <form action="{{ url_for('feature_text') }}" method="post" class="feature-form">
+        <label for="prompt_text">Enter your prompt:</label>
+        <textarea id="prompt_text" name="prompt_text" rows="6" required></textarea>
+
+        <div id="loading-indicator" class="loading-indicator">
+            <span class="spinner"></span>
+            Generating response... <span class="timer-span">0s</span>
+        </div>
+
+        <button type="submit" class="generate-button">Generate Text</button>
+    </form>
+
+    {% include 'partials/_result_display.html' with context %}
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script>
+    window.promptData = {{ prompts_data | tojson | safe if prompts_data else '{}' }};
+</script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        font-family: 'Poppins', sans-serif;
+        color: #ffffff;
+        overflow-x: hidden;
+    }
+    .back-link {
+        display: inline-block;
+        margin-bottom: 20px;
+        color: #ff80ab;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+
+    
+    /* Logo Animation */
+    @keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+        50% {
+            transform: scale(1.1);
+            opacity: 0.8;
+        }
+    }
+
+
+    .back-link:hover {
+        color: #ff6ec4;
+        text-shadow: 0 0 8px #ff6ec4;
+    }
+
+    .feature-page {
+        background: rgba(255, 255, 255, 0.08);
+        padding: 40px;
+        border-radius: 20px;
+        max-width: 750px;
+        margin: auto;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+        backdrop-filter: blur(8px);
+    }
+
+    .title {
+        text-align: center;
+        font-size: 32px;
+        color: #ffffff;
+        margin-bottom: 15px;
+        text-shadow: 0 0 6px #fff;
+    }
+
+    .subtitle {
+        text-align: center;
+        color: #d9d9ff;
+        margin-bottom: 35px;
+        font-size: 16px;
+    }
+
+    .prompt-library label,
+    .feature-form label {
+        font-weight: 600;
+        display: block;
+        margin-bottom: 8px;
+        color: #ffffff;
+    }
+
+    .prompt-select-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    @media (min-width: 600px) {
+        .prompt-select-wrapper {
+            flex-direction: row;
+        }
+    }
+
+    select,
+    textarea {
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid #ffffff33;
+        font-family: 'Poppins', sans-serif;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.15);
+        color: #ffffff;
+        backdrop-filter: blur(4px);
+        transition: border 0.3s;
+    }
+
+    select:focus,
+    textarea:focus {
+        border-color: #ff80ab;
+        outline: none;
+        box-shadow: 0 0 8px #ff80ab;
+    }
+
+    select option {
+        background-color: #6a11cb;
+        color: #fff;
+    }
+
+    textarea {
+        resize: vertical;
+        margin-bottom: 20px;
+    }
+
+    .generate-button {
+        background: linear-gradient(90deg, #ff6ec4, #7873f5);
+        color: white;
+        padding: 14px 30px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.3s;
+    }
+
+    .generate-button::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,110,196,0.4) 0%, transparent 70%);
+        transform: rotate(0deg);
+        animation: pulseGlow 3s linear infinite;
+        z-index: 0;
+    }
+
+    .generate-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 12px #ff6ec4, 0 0 25px #7873f5;
+    }
+
+    .generate-button span {
+        position: relative;
+        z-index: 1;
+    }
+
+    @keyframes pulseGlow {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .loading-indicator {
+        display: none;
+        margin-top: 20px;
+        text-align: center;
+        color: #ffffff;
+        font-size: 14px;
+    }
+
+    .spinner {
+        border: 4px solid #ffffff;
+        border-top: 4px solid #ff80ab;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+        animation: spin 1s linear infinite;
+        margin-right: 10px;
+        vertical-align: middle;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+</style>
+
+{% endblock %}

@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block title %}Audio Interaction - Gemini API{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('index') }}" class="back-link">
+    ← Back to Features
+</a>
+
+<div class="feature-page">
+    <h2 class="title">Interact with Audio</h2>
+    <p class="subtitle">Upload an audio file and enter a prompt related to its content. Requires a model capable of processing audio (like Gemini Pro 1.5).</p>
+
+    <!-- Prompt Library -->
+    <div class="prompt-library">
+        <label for="prompt-category-select">Prompt Library:</label>
+        <div class="prompt-select-wrapper">
+            <select id="prompt-category-select">
+                <option value="">-- Select Category --</option>
+            </select>
+            <select id="prompt-select" disabled>
+                <option value="">-- Select Prompt Title --</option>
+            </select>
+        </div>
+    </div>
+
+    <form action="{{ url_for('feature_audio') }}" method="post" enctype="multipart/form-data" class="feature-form">
+        <label for="file_audio">Upload Audio File:</label>
+        <input type="file" id="file_audio" name="file_audio" accept="audio/*" required>
+
+        <label for="prompt_audio">Ask about the Audio:</label>
+        <textarea id="prompt_audio" name="prompt_audio" rows="4" required></textarea>
+
+        <!-- Loading Indicator -->
+        <div id="loading-indicator" class="loading-indicator">
+            <span class="spinner"></span>
+            Processing Audio & Generating... <span class="timer-span">0s</span>
+        </div>
+
+        <button type="submit" class="generate-button">Generate from Audio</button>
+    </form>
+
+    <!-- Include Result Display Partial -->
+    {% include 'partials/_result_display.html' with context %}
+</div>
+{% endblock %}
+
+{% block scripts_extra %}
+<script>
+    window.promptData = {{ prompts_data | tojson | safe if prompts_data else '{}' }};
+</script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+<style>
+    /* Background Gradient */
+    body {
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        font-family: 'Poppins', sans-serif;
+        color: #ffffff;
+        overflow-x: hidden;
+    }
+    
+    .back-link {
+        display: inline-block;
+        margin-bottom: 20px;
+        color: #ff80ab;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+    
+    .back-link:hover {
+        color: #ff6ec4;
+        text-shadow: 0 0 8px #ff6ec4;
+    }
+    
+    .feature-page {
+        background: rgba(255, 255, 255, 0.08);
+        padding: 40px;
+        border-radius: 20px;
+        max-width: 600px;
+        margin: auto;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+        backdrop-filter: blur(8px);
+    }
+    
+    .title {
+        text-align: center;
+        font-size: 32px;
+        color: #ffffff;
+        margin-bottom: 15px;
+        text-shadow: 0 0 6px #fff;
+    }
+    
+    .subtitle {
+        text-align: center;
+        color: #d9d9ff;
+        margin-bottom: 35px;
+        font-size: 16px;
+    }
+    
+    .prompt-library label,
+    .feature-form label {
+        font-weight: 600;
+        display: block;
+        margin-bottom: 8px;
+        color: #ffffff;
+    }
+    
+    .prompt-select-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+    
+    @media (min-width: 600px) {
+        .prompt-select-wrapper {
+            flex-direction: row;
+        }
+    }
+    
+    select,
+    textarea,
+    input[type="file"] {
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid #ffffff33;
+        font-family: 'Poppins', sans-serif;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.15);
+        color: #ffffff;
+        backdrop-filter: blur(4px);
+        transition: border 0.3s;
+        margin-bottom: 20px;
+    }
+    
+    select:focus,
+    textarea:focus,
+    input:focus {
+        border-color: #ff80ab;
+        outline: none;
+        box-shadow: 0 0 8px #ff80ab;
+    }
+    
+    select option {
+        background-color: #352f5b;
+        color: #fff;
+    }
+    
+    textarea {
+        resize: vertical;
+    }
+    
+    .loading-indicator {
+        display: none;
+        margin-top: 20px;
+        color: #ffffff;
+        font-family: 'Poppins', sans-serif;
+        text-align: center;
+    }
+    
+    .loading-indicator.visible {
+        display: block;
+    }
+    
+    .spinner {
+        border: 4px solid #ffffff;
+        border-top: 4px solid #ff80ab;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .generate-button {
+        background: linear-gradient(90deg, #ff6ec4, #7873f5);
+        color: white;
+        padding: 14px 30px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 600;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.3s;
+        display: block;
+        margin: 0 auto;
+    }
+    
+    .generate-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 12px #ff6ec4, 0 0 25px #7873f5;
+    }
+</style>
+{% endblock %} 
